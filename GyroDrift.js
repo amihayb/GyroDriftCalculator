@@ -203,5 +203,23 @@ function postScript() {
     alert('	XAXIS=1	//Azimuth\ndisable\nXAXIS=0 //Elevation\ndisable //Disable both axis \nlog "Time,Temperature,GRAWX,GRAWY,GRAWZ", 0\nset TIME=0 //Set time to 0\nV0 = GTMP\nV1 = GRAWX\nV2 = GRAWY\nV3 = GRAWZ\nV11 = 0.001  // filter coefficient \nV12 = TIME\nwhile GTMP< 60.5\n	V0 = V11* GTMP + (1-V11)*V0\n	V1 = V11* GRAWX + (1-V11)*V1\n	V2 = V11* GRAWY + (1-V11)*V2\n	V3 = V11* GRAWZ + (1-V11)*V3\n	if TIME – V12 > 5000\n		log "{0},{1},{2},{3},{4}",TIME,GTMP,GRAWX,GRAWY,GRAWZ //Record log\n		V12 = TIME\nend\nend\n');
 }
 
+function downloadExampleCsv() {
+
+    var csvUrl = 'https://raw.githubusercontent.com/amihayb/GyroDriftCalculator/main/example-measurement.csv';
+    
+    fetch(csvUrl)
+        .then(response => response.blob())
+        .then(blob => {
+            // Create a temporary anchor element
+            var link = document.createElement("a");
+            link.href = window.URL.createObjectURL(blob);
+            link.download = 'example-measurement.csv'; // Filename when downloaded
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+}
+
+
 const createVector = (start, end) => Array.from({ length: end - start + 1 }, (_, i) => start + i);
 // const calculateY = (xValues, coefficients) => xValues.map(x => coefficients.reduce((acc, coeff, index) => acc + coeff * Math.pow(x, index), 0));
